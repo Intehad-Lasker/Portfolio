@@ -2,20 +2,25 @@
 
 Source for https://intehad-lasker.github.io/Portfolio/
 
-- `docs/` is the published site. GitHub Pages serves this folder.
+- `docs/` is the published site. Its contents are pushed to the `gh-pages` branch, which GitHub Pages serves.
 - `drafts/terminal/` is the design source the site is built from.
 - `scripts/build_site.py` rebuilds `docs/` from the design source.
+- `scripts/publish.sh` pushes `docs/` to the `gh-pages` branch.
 
 ## Changing the site
 
-Edit `drafts/terminal/index.html`, then run:
+Edit `drafts/terminal/index.html`, then rebuild:
 
 ```bash
 python3 scripts/build_site.py
 ```
 
-Commit and push. GitHub Pages republishes on every push to the branch it is set to serve.
+Commit the result, then publish it:
 
-## Publishing
+```bash
+scripts/publish.sh
+```
 
-In the repository settings, open Pages, choose "Deploy from a branch", then pick the branch and the `/docs` folder.
+## How publishing works
+
+GitHub Pages serves the `gh-pages` branch, which holds only the contents of `docs/`. `scripts/publish.sh` rebuilds `docs/` and pushes it to that branch.
