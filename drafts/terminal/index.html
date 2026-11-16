@@ -511,44 +511,124 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     set(k, v) { try { localStorage.setItem(k, v); } catch {} }
   };
 
-  /* ---------- ambient glyph field (densest upper right) ---------- */
+  /* ---------- living glyph field: drifts on its own, decodes into code under the pointer ---------- */
   const bg = $('#bg'), fx = $('#fx');
   const b = bg.getContext('2d'), f = fx.getContext('2d');
-  let W = 0, H = 0, cols = 0, rows = 0, grid = [];
+  const CODE = [
+    '@app.post("/reports")  async def create_report(report: Report, db: Session = Depends(get_db)):  ',
+    'SELECT id, customer FROM samples ORDER BY created_at, id;  ',
+    'location /api/ { proxy_pass http://127.0.0.1:8000; }  ',
+    'const [reports, setReports] = useState([]);  useEffect(() => { load(); }, []);  ',
+    'ExecStart=/usr/bin/uvicorn main:app --host 127.0.0.1 --port 8000  Restart=always  ',
+    'df = pd.read_csv(path).dropna().drop_duplicates(subset="id")  ',
+    'git checkout -b fix/sort-ties && git push -u origin fix/sort-ties  ',
+    'db.events.aggregate([{ $match: { type: "query" } }, { $group: { _id: "$user", n: { $sum: 1 } } }])  '
+  ];
+  const HALF = CELL / 2, LENS = 190, BAND = 54;
+  let W = 0, H = 0, cols = 0, rows = 0, dpr = 1, lastT = 0, ready = false;
+  let grid = [], truth = [], heat = new Float32Array(0), spark = new Float32Array(0);
+  let atlas = null, atlasAt = {}, atlasCell = CELL;
+  const waves = [];
   const density = (c, r) => {
     const d = Math.max(0, (c / cols) * 0.9 + (1 - r / rows) * 0.7 - 0.6);
     return Math.min(0.2, 0.028 + d * 0.17);
   };
-  function paintCell(c, r, hot) {
-    const x = c * CELL, y = r * CELL, a = density(c, r);
-    b.clearRect(x, y, CELL, CELL);
-    b.fillStyle = hot ? `rgba(${RED},${Math.min(0.85, a * 4 + 0.15)})` : `rgba(${BONE},${a})`;
-    b.fillText(grid[r * cols + c], x + CELL / 2, y + CELL / 2);
+  function buildAtlas() {
+    const chars = [...new Set((GLYPHS + CODE.join('')).replace(/ /g, ''))];
+    const s = atlasCell = Math.round(CELL * dpr);
+    atlas = document.createElement('canvas'); atlas.width = s * chars.length; atlas.height = s * 2;
+    const a = atlas.getContext('2d');
+    a.font = `${11 * dpr}px "JetBrains Mono", ui-monospace, monospace`; a.textAlign = 'center'; a.textBaseline = 'middle';
+    atlasAt = {};
+    chars.forEach((ch, i) => {
+      atlasAt[ch] = i * s;
+      a.fillStyle = `rgb(${BONE})`; a.fillText(ch, i * s + s / 2, s / 2);
+      a.fillStyle = `rgb(${RED})`; a.fillText(ch, i * s + s / 2, s + s / 2);
+    });
   }
-  function size() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
+  function size(force) {
+    const w = window.innerWidth, h = window.innerHeight;
+    if (force !== true && w === W && h <= H) return;  /* phone address bars shrink the view; keep the field steady */
+    H = w === W ? Math.max(H, h) : h; W = w;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
     for (const [cv, ctx] of [[bg, b], [fx, f]]) {
-      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     }
-    b.font = '11px "JetBrains Mono", ui-monospace, monospace';
     cols = Math.ceil(W / CELL); rows = Math.ceil(H / CELL);
-    grid = Array.from({ length: cols * rows }, () => pick(GLYPHS));
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) paintCell(c, r, false);
+    const n = cols * rows;
+    grid = Array.from({ length: n }, () => pick(GLYPHS));
+    truth = new Array(n);
+    for (let r = 0; r < rows; r++) {
+      const line = CODE[r % CODE.length], off = (r * 7) % line.length;
+      for (let c = 0; c < cols; c++) truth[r * cols + c] = line[(c + off) % line.length];
+    }
+    heat = new Float32Array(n); spark = new Float32Array(n);
+    buildAtlas();
+    if (reduce && ready) drawField(0);
   }
-  size();
+  /* Each cell has heat. The pointer and click shockwaves add it, time removes it.
+     Cold cells show drifting noise, warm cells scramble, hot cells resolve into real code. */
+  function drawField(t) {
+    const dt = Math.min(50, (t - lastT) || 16); lastT = t;
+    const cool = Math.exp(-dt / 520), scool = Math.exp(-dt / 220);
+    const live = !reduce && seen && inside;
+    const s = atlasCell, L2 = LENS * LENS;
+    b.clearRect(0, 0, W, H);
+    if (live) {
+      const R = LENS * 1.3, g = b.createRadialGradient(mx, my, 0, mx, my, R);
+      g.addColorStop(0, `rgba(${RED},.11)`); g.addColorStop(1, `rgba(${RED},0)`);
+      b.fillStyle = g; b.fillRect(mx - R, my - R, R * 2, R * 2);
+    }
+    for (let i = waves.length - 1; i >= 0; i--) {
+      const w = waves[i]; w.r = (t - w.t) * 0.6; w.k = 1 - w.r / 780;
+      if (w.k <= 0) waves.splice(i, 1);
+    }
+    const t1 = t * 0.0007, t2 = t * 0.0004, t3 = t * 0.0005;
+    for (let r = 0; r < rows; r++) {
+      const cy = r * CELL + HALF, bend = Math.sin(r * 0.13 + t2) * 1.6, rowW = r * 0.17 - t3;
+      for (let c = 0; c < cols; c++) {
+        const i = r * cols + c, cx = c * CELL + HALF;
+        let h = heat[i] * cool, sp = spark[i] * scool, ox = 0, oy = 0;
+        if (live) {
+          const dx = cx - mx, dy = cy - my, d2 = dx * dx + dy * dy;
+          if (d2 < L2) {
+            const d = Math.sqrt(d2) || 1, k = 1 - d / LENS, kk = k * k;
+            if (k > h) h = k;
+            ox = dx / d * kk * 13; oy = dy / d * kk * 13;
+          }
+        }
+        for (let j = 0; j < waves.length; j++) {
+          const w = waves[j], dx = cx - w.x, dy = cy - w.y, d = Math.sqrt(dx * dx + dy * dy) || 1, e = Math.abs(d - w.r);
+          if (e < BAND) {
+            const k = (1 - e / BAND) * w.k;
+            if (k > h) h = k;
+            ox += dx / d * k * 11; oy += dy / d * k * 11;
+          }
+        }
+        heat[i] = h; spark[i] = sp;
+        const drift = Math.sin(c * 0.21 + t1 + bend) * Math.sin(rowW + c * 0.05);
+        const a = density(c, r) * (0.5 + (drift > 0 ? drift : 0) * 1.1) + h * 0.5 + sp * 0.5;
+        if (a < 0.012) continue;
+        let ch;
+        if (h > 0.34) { ch = truth[i]; if (ch === ' ') continue; }
+        else { if (h > 0.06 && Math.random() < 0.25) grid[i] = pick(GLYPHS); ch = grid[i]; }
+        b.globalAlpha = a > 0.9 ? 0.9 : a;
+        b.drawImage(atlas, atlasAt[ch], (h > 0.62 || sp > 0.25) ? s : 0, s, s, cx - HALF + ox, cy - HALF + oy, CELL, CELL);
+      }
+    }
+    b.globalAlpha = 1;
+  }
+  size(true);
   let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(size, 120); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(size);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => size(true));
   if (!reduce) setInterval(() => {
     if (document.hidden) return;
-    const n = Math.max(2, (cols * rows * 0.004) | 0);
-    for (let i = 0; i < n; i++) {
-      const c = (Math.random() * cols) | 0, r = (Math.random() * rows) | 0;
-      grid[r * cols + c] = pick(GLYPHS);
-      const hot = Math.random() < 0.12;
-      paintCell(c, r, hot);
-      if (hot) setTimeout(() => { if (c < cols && r < rows) paintCell(c, r, false); }, 280);
+    const total = cols * rows, n = Math.max(2, (total * 0.004) | 0);
+    for (let k = 0; k < n; k++) {
+      const i = (Math.random() * total) | 0;
+      grid[i] = pick(GLYPHS);
+      if (Math.random() < 0.12) spark[i] = 1;
     }
   }, 110);
 
@@ -590,13 +670,21 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
       }
     }
   }, { passive: true });
-  addEventListener('pointerdown', e => { if (mode !== 'off') rips.push({ x: e.clientX, y: e.clientY, t: performance.now() }); }, { passive: true });
+  addEventListener('pointerdown', e => {
+    const t = performance.now();
+    if (!reduce) { waves.push({ x: e.clientX, y: e.clientY, t, r: 0, k: 1 }); if (waves.length > 4) waves.shift(); }
+    if (mode !== 'off') rips.push({ x: e.clientX, y: e.clientY, t });
+  }, { passive: true });
+  const touchEnd = e => { if (e.pointerType !== 'mouse') inside = false; };
+  addEventListener('pointerup', touchEnd, { passive: true });
+  addEventListener('pointercancel', touchEnd, { passive: true });
   document.addEventListener('pointerover', e => { hot = !!(e.target.closest && e.target.closest('a,button,input,label')); });
   document.documentElement.addEventListener('mouseleave', () => { inside = false; });
 
   function frame(t) {
     requestAnimationFrame(frame);
     if (document.hidden) return;
+    if (!reduce) drawField(t);
     f.clearRect(0, 0, W, H);
     if (mode === 'off') return;
 
@@ -655,6 +743,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
   }
   const savedTrail = store.get('trail');
   setMode(savedTrail && MODES.includes(savedTrail) ? savedTrail : (reduce ? 'off' : 'comet'));
+  ready = true;
+  if (reduce) drawField(0);
   requestAnimationFrame(frame);
 
   /* ---------- section wipe ---------- */
