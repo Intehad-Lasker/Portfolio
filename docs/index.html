@@ -244,17 +244,9 @@ h2{font:800 clamp(1.9rem,4.4vw,3.5rem)/1.02 var(--display);font-stretch:116%;let
 .mail code{font:500 clamp(1.05rem,2.6vw,1.6rem) var(--mono);color:var(--bone);user-select:all;word-break:break-all}
 .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
 footer{border-top:1px solid var(--line);font:400 .8125rem var(--mono);color:var(--dim)}
-footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-block:22px calc(22px + 56px)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-block:22px}
 
-/* ---------- trail switch + section wipe ---------- */
-.trail{position:fixed;z-index:25;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:2px;
-  background:rgba(12,16,19,.92);border:1px solid var(--line);border-radius:3px;padding:4px;font:400 .75rem var(--mono)}
-.trail span{color:var(--dim);padding:0 8px 0 6px}
-.trail button{font:inherit;color:var(--dim);background:none;border:0;border-radius:2px;padding:5px 9px;transition:color .2s,background .2s}
-.trail button:hover{color:var(--bone)}
-.trail button[aria-pressed="true"]{background:var(--signal);color:#0a0304;font-weight:600}
-@media (hover:none),(pointer:coarse){.trail{display:none}}
-
+/* ---------- section wipe ---------- */
 .wipe{position:fixed;inset:0;z-index:40;pointer-events:none;display:grid;grid-template-rows:repeat(5,1fr)}
 .wipe b{background:var(--panel);transform:translateX(-102%);box-shadow:2px 0 0 var(--signal),-2px 0 0 var(--signal)}
 .wipe.in{pointer-events:auto}
@@ -568,14 +560,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
   <div class="wrap"><span>Intehad Lasker, Hamilton, Ontario</span><span>Written by hand in HTML, CSS, and JavaScript</span></div>
 </footer>
 
-<div class="trail" role="group" aria-label="Pointer trail">
-  <span>trail</span>
-  <button type="button" data-trail="comet" aria-pressed="true">comet</button>
-  <button type="button" data-trail="glyphs" aria-pressed="false">glyphs</button>
-  <button type="button" data-trail="blocks" aria-pressed="false">blocks</button>
-  <button type="button" data-trail="off" aria-pressed="false">off</button>
-</div>
-
 <div class="wipe" id="wipe" aria-hidden="true">
   <b style="--i:0"></b><b style="--i:1"></b><b style="--i:2"></b><b style="--i:3"></b><b style="--i:4"></b>
   <p><span id="wipe-label">cd ~/work</span></p>
@@ -592,11 +576,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const pick = s => s[(Math.random() * s.length) | 0];
   const CELL = 26, GLYPHS = '0123456789abcdef{}[]<>/;=+*#$';
-  const RED = '232,40,45', BONE = '220,214,200', TEAL = '99,194,171';
-  const store = {
-    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch {} }
-  };
+  const RED = '232,40,45', BONE = '220,214,200';
 
   /* ---------- living glyph field: drifts on its own, decodes into code under the pointer ---------- */
   const bg = $('#bg'), fx = $('#fx');
@@ -719,48 +699,30 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     }
   }, 110);
 
-  /* ---------- pointer trails ---------- */
-  const MODES = ['comet', 'glyphs', 'blocks', 'off'];
-  let mode = 'comet', mx = -99, my = -99, rx = -99, ry = -99, cr = 12;
+  /* ---------- pointer trail: glyphs that fall away behind the pointer ---------- */
+  const trail = !reduce;
+  let mx = -99, my = -99, rx = -99, ry = -99, cr = 12;
   let seen = false, inside = false, hot = false, mouse = false;
   let last = { x: 0, y: 0 };
-  const pts = [], parts = [], rips = [], cells = new Map();
-
-  function setMode(m) {
-    if (!MODES.includes(m)) return false;
-    mode = m; pts.length = 0; parts.length = 0; cells.clear();
-    root.classList.toggle('cursor-on', fine && m !== 'off' && seen);
-    $$('[data-trail]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.trail === m)));
-    store.set('trail', m);
-    return true;
-  }
-  $$('[data-trail]').forEach(el => el.addEventListener('click', () => setMode(el.dataset.trail)));
+  const parts = [], rips = [];
 
   addEventListener('pointermove', e => {
     const t = performance.now();
     mouse = e.pointerType === 'mouse';
-    const px = mx, py = my;
     mx = e.clientX; my = e.clientY; inside = true;
-    if (!seen) { seen = true; rx = mx; ry = my; last = { x: mx, y: my }; root.classList.toggle('cursor-on', fine && mode !== 'off'); return; }
-    if (mode === 'comet') pts.push({ x: mx, y: my, t });
-    else if (mode === 'glyphs') {
-      const dx = mx - last.x, dy = my - last.y;
-      if (dx * dx + dy * dy > 150) {
-        last = { x: mx, y: my };
-        parts.push({ x: mx + (Math.random() - .5) * 10, y: my + (Math.random() - .5) * 10, vx: (Math.random() - .5) * .5, vy: .25 + Math.random() * .8, t, ch: pick(GLYPHS), s: 11 + Math.random() * 7 });
-      }
-    } else if (mode === 'blocks') {
-      const dist = Math.hypot(mx - px, my - py), steps = Math.max(1, Math.ceil(dist / (CELL / 2)));
-      for (let i = 1; i <= steps; i++) {
-        const x = px + (mx - px) * i / steps, y = py + (my - py) * i / steps;
-        cells.set(((y / CELL) | 0) * 4096 + ((x / CELL) | 0), t);
-      }
+    if (!seen) { seen = true; rx = mx; ry = my; last = { x: mx, y: my }; root.classList.toggle('cursor-on', fine && trail); return; }
+    if (!trail) return;
+    const dx = mx - last.x, dy = my - last.y;
+    if (dx * dx + dy * dy > 150) {
+      last = { x: mx, y: my };
+      parts.push({ x: mx + (Math.random() - .5) * 10, y: my + (Math.random() - .5) * 10, vx: (Math.random() - .5) * .5, vy: .25 + Math.random() * .8, t, ch: pick(GLYPHS), s: 11 + Math.random() * 7 });
     }
   }, { passive: true });
   addEventListener('pointerdown', e => {
+    if (!trail) return;
     const t = performance.now();
-    if (!reduce) { waves.push({ x: e.clientX, y: e.clientY, t, r: 0, k: 1 }); if (waves.length > 4) waves.shift(); }
-    if (mode !== 'off') rips.push({ x: e.clientX, y: e.clientY, t });
+    waves.push({ x: e.clientX, y: e.clientY, t, r: 0, k: 1 }); if (waves.length > 4) waves.shift();
+    rips.push({ x: e.clientX, y: e.clientY, t });
   }, { passive: true });
   const touchEnd = e => { if (e.pointerType !== 'mouse') inside = false; };
   addEventListener('pointerup', touchEnd, { passive: true });
@@ -769,46 +731,20 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
   document.documentElement.addEventListener('mouseleave', () => { inside = false; });
 
   function frame(t) {
+    if (!trail) return;
     requestAnimationFrame(frame);
     if (document.hidden) return;
-    if (!reduce) drawField(t);
+    drawField(t);
     f.clearRect(0, 0, W, H);
-    if (mode === 'off') return;
 
-    if (mode === 'comet') {
-      const LIFE = 440;
-      while (pts.length && t - pts[0].t > LIFE) pts.shift();
-      f.lineCap = 'round';
-      for (let pass = 0; pass < 2; pass++) {
-        for (let i = 1; i < pts.length; i++) {
-          const p0 = pts[i - 1], p1 = pts[i], k = Math.max(0, 1 - (t - p1.t) / LIFE);
-          const o = pass ? 0 : 2 + (1 - k) * 4;
-          f.lineWidth = 1 + k * k * 6;
-          f.strokeStyle = pass ? `rgba(${RED},${k * 0.9})` : `rgba(${TEAL},${k * 0.3})`;
-          f.beginPath(); f.moveTo(p0.x + o, p0.y + o * .6); f.lineTo(p1.x + o, p1.y + o * .6); f.stroke();
-        }
-      }
-    } else if (mode === 'glyphs') {
-      for (let i = parts.length - 1; i >= 0; i--) {
-        const p = parts[i], k = 1 - (t - p.t) / 850;
-        if (k <= 0) { parts.splice(i, 1); continue; }
-        p.x += p.vx; p.y += p.vy;
-        if (Math.random() < 0.06) p.ch = pick(GLYPHS);
-        f.font = `${p.s}px "JetBrains Mono", ui-monospace, monospace`;
-        f.fillStyle = k > 0.7 ? `rgba(${BONE},${k})` : `rgba(${RED},${k * 1.3})`;
-        f.fillText(p.ch, p.x, p.y);
-      }
-    } else if (mode === 'blocks') {
-      f.font = '11px "JetBrains Mono", ui-monospace, monospace';
-      for (const [key, t0] of cells) {
-        const k = 1 - (t - t0) / 900;
-        if (k <= 0) { cells.delete(key); continue; }
-        const c = key % 4096, r = (key / 4096) | 0;
-        f.fillStyle = `rgba(${RED},${k * k * 0.6})`;
-        f.fillRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2);
-        f.fillStyle = `rgba(${BONE},${k})`;
-        f.fillText(grid[r * cols + c] || '0', c * CELL + CELL / 2, r * CELL + CELL / 2);
-      }
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i], k = 1 - (t - p.t) / 850;
+      if (k <= 0) { parts.splice(i, 1); continue; }
+      p.x += p.vx; p.y += p.vy;
+      if (Math.random() < 0.06) p.ch = pick(GLYPHS);
+      f.font = `${p.s}px "JetBrains Mono", ui-monospace, monospace`;
+      f.fillStyle = k > 0.7 ? `rgba(${BONE},${k})` : `rgba(${RED},${k * 1.3})`;
+      f.fillText(p.ch, p.x, p.y);
     }
 
     for (let i = rips.length - 1; i >= 0; i--) {
@@ -828,8 +764,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
       f.beginPath(); f.arc(mx, my, 3, 0, 6.2832); f.fill();
     }
   }
-  const savedTrail = store.get('trail');
-  setMode(savedTrail && MODES.includes(savedTrail) ? savedTrail : (reduce ? 'off' : 'comet'));
   ready = true;
   if (reduce) drawField(0);
   requestAnimationFrame(frame);
@@ -933,7 +867,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
       row('stack', 'what I build with'),
       row('school', 'where I study'),
       row('contact', 'how to reach me'),
-      row('trail', 'comet | glyphs | blocks | off'),
       row('clear', 'wipe this screen')
     ],
     about: () => [
@@ -947,7 +880,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     now: () => NOW,
     clear: () => { out.innerHTML = ''; return []; },
     contact: () => { go('contact'); return [row('email', EMAIL), row('github', '<a href="https://github.com/Intehad-Lasker" target="_blank" rel="noopener">github.com/Intehad-Lasker</a>'), row('linkedin', '<a href="https://linkedin.com/in/intehad-lasker" target="_blank" rel="noopener">linkedin.com/in/intehad-lasker</a>')]; },
-    trail: a => setMode(a[0]) ? [`<span class="ok">pointer trail set to ${esc(a[0])}</span>`] : ['usage: trail comet | glyphs | blocks | off'],
     sudo: a => a.join(' ') === 'hire intehad'
       ? ['[sudo] password for visitor: ********', `<span class="ok">Access granted.</span> Send the details to ${EMAIL}`]
       : ['<span class="hot">visitor is not in the sudoers file.</span> Try: sudo hire intehad']
