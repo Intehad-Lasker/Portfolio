@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Intehad Lasker, Full-Stack Developer</title>
-<meta name="description" content="Full-stack developer and Management Engineering student at the University of Waterloo. React, FastAPI, MySQL, and the pipelines that ship them.">
+<meta name="description" content="Full-stack developer and Management Engineering student at the University of Waterloo. Web apps built end to end, data pipelines, and ML tooling.">
 <meta name="theme-color" content="#06080a">
 <link rel="canonical" href="https://intehad-lasker.github.io/Portfolio/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2306080a'/%3E%3Crect x='11' y='6' width='10' height='20' fill='%23e8282d'/%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://intehad-lasker.github.io/Portfolio/">
 <meta property="og:title" content="Intehad Lasker, Full-Stack Developer">
-<meta property="og:description" content="Full-stack developer and Management Engineering student at the University of Waterloo. React, FastAPI, MySQL, and the pipelines that ship them.">
+<meta property="og:description" content="Full-stack developer and Management Engineering student at the University of Waterloo. Web apps built end to end, data pipelines, and ML tooling.">
 <meta property="og:image" content="https://intehad-lasker.github.io/Portfolio/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,16 +134,43 @@ h2{font:800 clamp(1.9rem,4.4vw,3.5rem)/1.02 var(--display);font-stretch:116%;let
 }
 @media (max-width:520px){.term-line label .host{display:none}}
 
-/* ---------- work ---------- */
-.threads{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px);margin-top:clamp(40px,6vw,72px)}
+/* ---------- work: an index, then one frame per role ---------- */
+.roles{list-style:none;margin:clamp(32px,5vw,56px) 0 0;padding:0;border-top:1px solid var(--line)}
+.roles a{display:grid;grid-template-columns:10.5rem minmax(0,1.2fr) minmax(0,1fr);gap:4px 24px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line);text-decoration:none;transition:padding-left .4s var(--ease)}
+.roles a:hover{padding-left:14px}
+.roles .when{font:400 .8125rem var(--mono);color:var(--dim);white-space:nowrap}
+.roles .org{font:700 clamp(1.05rem,2vw,1.35rem)/1.2 var(--display);font-stretch:110%;transition:color .25s}
+.roles a:hover .org{color:var(--signal)}
+.roles .role{color:var(--dim);font-size:.9375rem}
+@media (max-width:700px){.roles a{grid-template-columns:minmax(0,1fr)}}
+
+.job{scroll-margin-top:64px;position:relative;margin-top:clamp(64px,10vw,128px);padding-top:clamp(40px,6vw,72px);border-top:1px solid var(--line)}
+.job::before{content:"";position:absolute;top:-1px;left:0;width:min(200px,40%);height:1px;background:var(--signal)}
+.job-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 40px;align-items:end}
+.job-name{font:900 clamp(2.2rem,6.4vw,5rem)/.92 var(--display);font-stretch:122%;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.job-meta{margin:0;font:400 .8125rem/1.75 var(--mono);color:var(--dim);text-align:right;white-space:nowrap}
+.job-meta b{display:block;color:var(--signal);font-weight:500}
+.job-line{font-size:clamp(1.15rem,2vw,1.5rem);line-height:1.4;max-width:46ch;margin:26px 0 0}
+@media (max-width:760px){.job-head{grid-template-columns:minmax(0,1fr)}.job-meta{text-align:left;white-space:normal}}
+
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:24px clamp(20px,3vw,40px);margin:clamp(32px,5vw,56px) 0 0}
+.figs div{border-top:1px solid var(--line);padding-top:14px}
+.figs dt{font:800 clamp(1.9rem,3.8vw,3rem)/1 var(--display);font-stretch:118%;letter-spacing:-.02em;color:var(--signal);font-variant-numeric:tabular-nums}
+.figs dd{margin:8px 0 0;color:var(--dim);font-size:.9375rem;line-height:1.4;max-width:22ch}
+
+.threads{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px);margin-top:clamp(36px,5vw,60px)}
 .thread{border-top:1px solid var(--line);padding-top:18px;position:relative}
 .thread::before{content:"";position:absolute;top:-1px;left:0;width:36px;height:1px;background:var(--signal);transition:width .6s var(--ease)}
 .thread:hover::before{width:100%}
-.thread h3{font:700 1.125rem/1.25 var(--display);font-stretch:108%;margin:0 0 8px}
+.thread h4{font:700 1.125rem/1.25 var(--display);font-stretch:108%;margin:0 0 8px}
 .thread p{margin:0;color:var(--dim);font-size:1rem}
 @media (max-width:820px){.threads{grid-template-columns:minmax(0,1fr)}}
 
-.route{margin-top:clamp(40px,6vw,72px);border:1px solid var(--line);background:rgba(12,16,19,.88);border-radius:4px;padding:clamp(18px,3vw,32px)}
+.uses{display:flex;flex-wrap:wrap;gap:8px;margin:clamp(24px,3vw,36px) 0 0;padding:0;list-style:none;font:400 .75rem var(--mono)}
+.uses li{border:1px solid var(--line);border-radius:2px;padding:3px 9px;color:var(--dim)}
+.tag{display:inline-block;font:400 .75rem var(--mono);color:var(--signal);border:1px solid var(--signal-deep);border-radius:2px;padding:1px 7px;margin-left:10px;vertical-align:middle}
+
+.route{margin-top:clamp(36px,5vw,60px);border:1px solid var(--line);background:rgba(12,16,19,.88);border-radius:4px;padding:clamp(18px,3vw,32px)}
 .route-title{font:400 .8125rem var(--mono);color:var(--dim);margin:0 0 20px}
 .hops{display:flex;align-items:stretch}
 .hop{flex:1 1 0;min-width:0;border:1px solid var(--line);background:var(--void);padding:14px 16px;border-radius:2px;animation:lit 3.6s linear infinite;animation-delay:calc(var(--i)*.9s)}
@@ -166,7 +193,7 @@ h2{font:800 clamp(1.9rem,4.4vw,3.5rem)/1.02 var(--display);font-stretch:116%;let
 }
 
 .incidents{margin-top:clamp(28px,4vw,48px);font:400 .875rem/1.6 var(--mono)}
-.incidents h3{font:400 .8125rem var(--mono);color:var(--dim);margin:0 0 10px}
+.incidents h4{font:400 .8125rem var(--mono);color:var(--dim);margin:0 0 10px}
 .inc{display:grid;grid-template-columns:8.5rem 5.5rem minmax(0,1fr);gap:4px 18px;padding:14px 0;border-top:1px solid var(--line)}
 .inc:last-child{border-bottom:1px solid var(--line)}
 .inc .app{color:var(--phosphor)}
@@ -195,34 +222,12 @@ h2{font:800 clamp(1.9rem,4.4vw,3.5rem)/1.02 var(--display);font-stretch:116%;let
 .shot img.on{opacity:1;transform:none}
 @media (max-width:860px){.proj{grid-template-columns:minmax(0,1fr)}}
 
-/* ---------- log ---------- */
-.log{list-style:none;margin:clamp(36px,5vw,60px) 0 0;padding:0;border-left:1px solid var(--line);margin-left:6px}
-.commit{position:relative;padding:0 0 30px clamp(20px,3vw,36px)}
-.commit:last-child{padding-bottom:0}
-.commit::before{content:"";position:absolute;left:-5px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--void);border:1px solid var(--dim)}
-.commit.head::before{background:var(--signal);border-color:var(--signal);box-shadow:0 0 0 0 rgba(232,40,45,.6);animation:ping 2.2s var(--ease) infinite}
-@keyframes ping{to{box-shadow:0 0 0 12px rgba(232,40,45,0)}}
-.commit-top{display:grid;grid-template-columns:9.5rem minmax(0,1fr) auto;gap:4px 20px;align-items:baseline;width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;padding:0}
-.commit-top .when{font:400 .8125rem var(--mono);color:var(--dim);font-variant-numeric:tabular-nums}
-.commit-top .org{font:700 clamp(1.125rem,2vw,1.4rem)/1.2 var(--display);font-stretch:110%;transition:color .25s}
-.commit-top .org small{display:block;font:400 .9375rem/1.4 var(--display);font-stretch:100%;color:var(--dim);margin-top:3px}
-button.commit-top:hover .org{color:var(--signal)}
-.commit-top .tog{font:400 .8125rem var(--mono);color:var(--dim);white-space:nowrap}
-.commit-top .tog::before{content:"+ more"}
-.commit-top[aria-expanded="true"] .tog::before{content:"- less"}
-.sum{margin:8px 0 0;max-width:62ch;padding-left:calc(9.5rem + 20px)}
-.more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease);padding-left:calc(9.5rem + 20px)}
-.more > div{overflow:hidden;min-height:0}
-.more.open{grid-template-rows:1fr}
-.more ul{margin:12px 0 0;padding:0 0 0 1.1em;color:var(--dim);max-width:64ch}
-.more li{margin-top:6px}
-.more li::marker{color:var(--signal)}
-.tag{display:inline-block;font:400 .75rem var(--mono);color:var(--signal);border:1px solid var(--signal-deep);border-radius:2px;padding:1px 7px;margin-left:10px;vertical-align:middle}
-@media (max-width:700px){
-  .commit-top{grid-template-columns:minmax(0,1fr) auto}
-  .commit-top .when{grid-column:1/-1}
-  .sum,.more{padding-left:0}
-}
+/* ---------- school ---------- */
+.school{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 40px;align-items:end}
+.school p.degree{margin:18px 0 0;font-size:1.125rem;max-width:44ch}
+.courses{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0 0;padding:0;list-style:none;font:400 .8125rem var(--mono)}
+.courses li{border:1px solid var(--line);border-radius:2px;padding:5px 11px;color:var(--bone)}
+@media (max-width:760px){.school{grid-template-columns:minmax(0,1fr)}}
 
 /* ---------- stack ---------- */
 .conf{margin-top:clamp(32px,5vw,56px);font:400 .875rem/1.5 var(--mono);border-top:1px solid var(--line)}
@@ -230,9 +235,6 @@ button.commit-top:hover .org{color:var(--signal)}
 .conf-row dt{color:var(--dim)}
 .conf-row dd{margin:0;display:flex;flex-wrap:wrap;gap:8px 20px}
 .conf-row dd span{color:var(--bone);transition:color .2s}
-.conf-row dd span.live::before{content:"";display:inline-block;width:7px;height:7px;background:var(--signal);margin-right:8px;vertical-align:1px}
-.legend{font:400 .8125rem var(--mono);color:var(--dim);margin:16px 0 0}
-.legend i{display:inline-block;width:7px;height:7px;background:var(--signal);margin-right:8px}
 @media (max-width:640px){.conf-row{grid-template-columns:minmax(0,1fr)}}
 
 /* ---------- contact ---------- */
@@ -279,7 +281,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     <nav aria-label="Sections">
       <a href="#work" data-go="work">work</a>
       <a href="#project" data-go="project">project</a>
-      <a href="#log" data-go="log">log</a>
       <a href="#stack" data-go="stack">stack</a>
       <a href="#contact" data-go="contact">contact</a>
     </nav>
@@ -292,8 +293,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     <div class="hero-id">
       <p class="who"><b>visitor@intehad:~$</b> whoami</p>
       <h1 class="name"><span>Intehad</span><span>Lasker</span></h1>
-      <p class="pitch">Full-stack developer. I build the form, the endpoint behind it, the schema under that, and the pipeline that ships all three.</p>
-      <p class="where">Management Engineering at the University of Waterloo. Currently keeping three production apps running at Redstone Food Group.</p>
+      <p class="pitch">Full-stack developer. I build web apps end to end, and the data pipelines that feed them.</p>
+      <p class="where">Management Engineering at the University of Waterloo. Four roles so far, across full-stack development, data engineering, and ML tooling.</p>
       <div class="cta">
         <a class="btn go" href="#work" data-go="work">See the work</a>
         <a class="btn" href="#contact" data-go="contact">Get in touch</a>
@@ -302,7 +303,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
 
     <div class="term" id="term">
       <div class="term-bar"><span>visitor@intehad: ~</span><em>live</em></div>
-      <div class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output"><div><span class="ps">visitor@intehad:~$</span> cat now.txt</div><div><span class="k">role     </span>full-stack developer, Redstone Food Group</div><div><span class="k">running  </span>3 production apps on AWS EC2</div><div><span class="k">school   </span>Management Engineering, Waterloo</div><div><span class="k">based    </span>Hamilton, Ontario</div><div> </div><div class="ok">This terminal works. Type help, or tap a command.</div></div>
+      <div class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output"><div><span class="ps">visitor@intehad:~$</span> cat now.txt</div><div><span class="k">builds   </span>full-stack web apps and data pipelines</div><div><span class="k">roles    </span>4 so far: full-stack, data, ML tooling</div><div><span class="k">school   </span>Management Engineering, Waterloo</div><div><span class="k">based    </span>Hamilton, Ontario</div><div> </div><div class="ok">This terminal works. Type help, or tap a command.</div></div>
       <form class="term-line" id="term-form" autocomplete="off">
         <label for="term-input"><span class="host">visitor@intehad:</span>~$</label>
         <input id="term-input" type="text" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type a command" aria-label="Terminal command">
@@ -322,24 +323,37 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
 <section class="block" id="work">
   <div class="wrap">
     <p class="path" data-scramble>~/work</p>
-    <h2 class="scan">Three production apps, kept running and made easier to change.</h2>
-    <p class="lede scan" style="--d:90ms">At Redstone Food Group I look after <strong>QA Tracker</strong>, <strong>Sample Requests</strong>, and <strong>R&amp;D</strong>, the tools the quality team opens every day. Together they take in 100+ QA reports a day and track more than $150K of sample shipping a year.</p>
-
+    <h2 class="scan">Four roles so far.</h2>
+    <p class="lede scan" style="--d:90ms">Full-stack development, data engineering, and ML tooling. Newest first, each with its own section below.</p>
+    <ol class="roles scan">
+      <li><a href="#redstone" data-go="redstone"><span class="when">Sep 2026 to now</span><span class="org">Redstone Food Group</span><span class="role">Full-stack developer</span></a></li>
+      <li><a href="#cleantech" data-go="cleantech"><span class="when">Mar to May 2026</span><span class="org">Global Cleantech Directory</span><span class="role">Data engineer and full-stack developer</span></a></li>
+      <li><a href="#waterloo" data-go="waterloo"><span class="when">Jan to Apr 2026</span><span class="org">University of Waterloo</span><span class="role">Data engineer</span></a></li>
+      <li><a href="#eon" data-go="eon"><span class="when">May to Aug 2025</span><span class="org">Eon Media AI</span><span class="role">Software engineer</span></a></li>
+    </ol>
+  </div>
+  <div class="wrap"><article class="job" id="redstone">
+    <p class="path" data-scramble>~/work/redstone</p>
+    <header class="job-head scan">
+      <h3 class="job-name">Redstone Food Group</h3>
+      <p class="job-meta"><b>Full-stack developer <span class="tag">current</span></b>Sep 2026 to now<br>Mississauga, ON</p>
+    </header>
+    <p class="job-line scan" style="--d:90ms">Three production web apps for the quality team, kept running and rebuilt to be easier to change.</p>
+    <dl class="figs scan"><div><dt>3</dt><dd>production apps: QA Tracker, Sample Requests, R&amp;D</dd></div><div><dt>100+</dt><dd>QA reports handled every day</dd></div><div><dt>$150K+</dt><dd>of sample shipping supported a year</dd></div></dl>
     <div class="threads">
       <article class="thread scan">
-        <h3>One shape instead of three</h3>
-        <p>The apps had grown by copy and paste. I'm rebuilding them as a modular monolith, with schemas shared from the React forms through FastAPI down to MySQL.</p>
+        <h4>One shape instead of three</h4>
+        <p>The code was messy and duplicated. I'm redesigning it as a modular monolith following SOLID and DRY, with schemas shared from the React forms through FastAPI down to MySQL.</p>
       </article>
       <article class="thread scan" style="--d:110ms">
-        <h3>Deploys that don't need me</h3>
-        <p>Releases used to mean logging in, pulling, and restarting by hand. Now a CI/CD pipeline ships to Linux EC2, where each app runs as a systemd service behind nginx.</p>
+        <h4>Deploys that don't need me</h4>
+        <p>Releases used to mean manual pulls and restarts. Now CI/CD pipelines deploy to Linux EC2, where each app runs as a systemd service behind nginx.</p>
       </article>
       <article class="thread scan" style="--d:220ms">
-        <h3>Requests in plain language</h3>
+        <h4>Requests in plain language</h4>
         <p>QA managers describe what they need in their own words. I turn that into a React form and a FastAPI endpoint, shipped through a branch, a pull request, and review.</p>
       </article>
     </div>
-
     <div class="route scan">
       <p class="route-title">How a QA report travels</p>
       <div class="hops">
@@ -351,15 +365,121 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
         <div class="wire" style="--i:2" aria-hidden="true"><i></i></div>
         <div class="hop" style="--i:3"><small>It lands in the database</small><b>MySQL</b></div>
       </div>
-      <p class="route-note">All of it runs on Linux EC2. New versions arrive through the CI/CD pipeline, which replaced manual pulls and restarts.</p>
     </div>
-
     <div class="incidents scan">
-      <h3>tail -n 2 incidents.log</h3>
+      <h4>tail -n 2 incidents.log</h4>
       <div class="inc"><span class="app">qa-tracker</span><span class="ev">outage</span><p>Followed the EC2 server logs back to the root cause, then wrote the incident report.</p></div>
       <div class="inc"><span class="app">all three apps</span><span class="ev">"None"</span><p>Customer fields were showing "None". The cause was MySQL sort ties: rows with equal sort values come back in no guaranteed order.</p></div>
     </div>
-  </div>
+    <ul class="uses scan" aria-label="Built with"><li>React</li><li>FastAPI</li><li>MySQL</li><li>AWS EC2</li><li>Linux</li><li>nginx</li><li>systemd</li><li>CI/CD</li></ul>
+  </article></div>
+  <div class="wrap"><article class="job" id="cleantech">
+    <p class="path" data-scramble>~/work/cleantech</p>
+    <header class="job-head scan">
+      <h3 class="job-name">Global Cleantech Directory</h3>
+      <p class="job-meta"><b>Data engineer and full-stack developer</b>Mar to May 2026<br>Richmond Hill, ON</p>
+    </header>
+    <p class="job-line scan" style="--d:90ms">A web platform built from scratch, and the data plumbing behind its chatbot.</p>
+    <div class="threads">
+      <article class="thread scan">
+        <h4>A platform from nothing</h4>
+        <p>I built the full-stack web platform from scratch in JavaScript, Node.js, HTML, and CSS.</p>
+      </article>
+      <article class="thread scan" style="--d:110ms">
+        <h4>Every action, logged</h4>
+        <p>Event logging captures how people behave across the platform, so usage is something you can query.</p>
+      </article>
+      <article class="thread scan" style="--d:220ms">
+        <h4>A chatbot you can measure</h4>
+        <p>MongoDB schemas and aggregation pipelines for chatbot and user data connect the OpenAI-powered chatbot to its query logs and engagement metrics.</p>
+      </article>
+    </div>
+    <div class="route scan">
+      <p class="route-title">How a chatbot question becomes a metric</p>
+      <div class="hops">
+        <div class="hop" style="--i:0"><small>A visitor asks a question</small><b>OpenAI <span>chatbot</span></b></div>
+        <div class="wire" style="--i:0" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:1"><small>The platform logs it</small><b>Node.js <span>events</span></b></div>
+        <div class="wire" style="--i:1" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:2"><small>It is stored to a schema</small><b>MongoDB</b></div>
+        <div class="wire" style="--i:2" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:3"><small>It is rolled up</small><b>aggregation <span>pipeline</span></b></div>
+      </div>
+    </div>
+    <ul class="uses scan" aria-label="Built with"><li>JavaScript</li><li>Node.js</li><li>HTML</li><li>CSS</li><li>MongoDB</li><li>OpenAI API</li></ul>
+  </article></div>
+  <div class="wrap"><article class="job" id="waterloo">
+    <p class="path" data-scramble>~/work/waterloo</p>
+    <header class="job-head scan">
+      <h3 class="job-name">University of Waterloo</h3>
+      <p class="job-meta"><b>Data engineer</b>Jan to Apr 2026<br>Waterloo, ON</p>
+    </header>
+    <p class="job-line scan" style="--d:90ms">Manual report prep replaced by pipelines, and dashboards that senior leadership reviews every month.</p>
+    <dl class="figs scan"><div><dt>24</dt><dd>months of GA4 and library data, cleaned and joined</dd></div><div><dt>30%</dt><dd>fewer data inconsistencies</dd></div><div><dt>3+ hrs</dt><dd>of manual prep saved every week</dd></div><div><dt>10+</dt><dd>KPIs tracked on the dashboards</dd></div></dl>
+    <div class="threads">
+      <article class="thread scan">
+        <h4>Two sources, one clean table</h4>
+        <p>Automated pipelines in Python (Pandas) and SQL clean GA4 analytics and library data, then join them.</p>
+      </article>
+      <article class="thread scan" style="--d:110ms">
+        <h4>Prep that runs itself</h4>
+        <p>What used to be manual preparation is now a pipeline, which is where the weekly hours came back from.</p>
+      </article>
+      <article class="thread scan" style="--d:220ms">
+        <h4>Dashboards people read</h4>
+        <p>I built the Power BI and Oracle BI dashboards on top, and senior leadership reviews them monthly.</p>
+      </article>
+    </div>
+    <div class="route scan">
+      <p class="route-title">How raw exports become a dashboard</p>
+      <div class="hops">
+        <div class="hop" style="--i:0"><small>Raw data comes in</small><b>GA4 <span>+ library data</span></b></div>
+        <div class="wire" style="--i:0" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:1"><small>It is cleaned</small><b>Python <span>Pandas</span></b></div>
+        <div class="wire" style="--i:1" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:2"><small>It is joined</small><b>SQL</b></div>
+        <div class="wire" style="--i:2" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:3"><small>Leadership reads it</small><b>Power BI <span>+ Oracle BI</span></b></div>
+      </div>
+    </div>
+    <ul class="uses scan" aria-label="Built with"><li>Python</li><li>Pandas</li><li>SQL</li><li>GA4</li><li>Power BI</li><li>Oracle BI</li></ul>
+  </article></div>
+  <div class="wrap"><article class="job" id="eon">
+    <p class="path" data-scramble>~/work/eon</p>
+    <header class="job-head scan">
+      <h3 class="job-name">Eon Media AI</h3>
+      <p class="job-meta"><b>Software engineer</b>May to Aug 2025<br>Toronto, ON</p>
+    </header>
+    <p class="job-line scan" style="--d:90ms">Sports broadcast data cleaned up for ML training, and a framework that scores LLMs against each other.</p>
+    <dl class="figs scan"><div><dt>50K+</dt><dd>records cleaned and restructured</dd></div><div><dt>25%</dt><dd>fewer data quality errors</dd></div><div><dt>5+</dt><dd>LLMs benchmarked</dd></div><div><dt>40%</dt><dd>less manual review of AI captions</dd></div></dl>
+    <div class="threads">
+      <article class="thread scan">
+        <h4>ETL for a broadcast dataset</h4>
+        <p>Pipelines in Python (Pandas, NumPy) cleaned and restructured a sports broadcast dataset, which sped up ML model training.</p>
+      </article>
+      <article class="thread scan" style="--d:110ms">
+        <h4>Data that holds up</h4>
+        <p>SQL schemas and Python validation checks for 1,000+ annotated samples, pulling transcripts and movement data from video APIs and keeping data integrity above 90%.</p>
+      </article>
+      <article class="thread scan" style="--d:220ms">
+        <h4>LLMs, scored automatically</h4>
+        <p>A Python evaluation framework auto-scores highlight detection output across models. Prompt engineering on top improved the AI captions.</p>
+      </article>
+    </div>
+    <div class="route scan">
+      <p class="route-title">How broadcast footage becomes a score</p>
+      <div class="hops">
+        <div class="hop" style="--i:0"><small>Footage data comes in</small><b>video <span>APIs</span></b></div>
+        <div class="wire" style="--i:0" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:1"><small>It is cleaned</small><b>ETL <span>Pandas, NumPy</span></b></div>
+        <div class="wire" style="--i:1" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:2"><small>It is checked</small><b>SQL <span>+ validation</span></b></div>
+        <div class="wire" style="--i:2" aria-hidden="true"><i></i></div>
+        <div class="hop" style="--i:3"><small>Models are scored on it</small><b>LLM <span>evaluation</span></b></div>
+      </div>
+    </div>
+    <ul class="uses scan" aria-label="Built with"><li>Python</li><li>Pandas</li><li>NumPy</li><li>SQL</li><li>LLM evaluation</li><li>Prompt engineering</li></ul>
+  </article></div>
 </section>
 
 <section class="block" id="project">
@@ -398,85 +518,33 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
   </div>
 </section>
 
-<section class="block" id="log">
-  <div class="wrap">
-    <p class="path" data-scramble>~/log</p>
-    <h2 class="scan">Where I've worked, newest first.</h2>
-    <ol class="log">
-      <li class="commit head scan">
-        <button type="button" class="commit-top" aria-expanded="false" aria-controls="m1">
-          <span class="when">Sep 2026 to now</span>
-          <span class="org">Redstone Food Group <span class="tag">HEAD</span><small>Full-stack developer, Mississauga</small></span>
-          <span class="tog" aria-hidden="true"></span>
-        </button>
-        <p class="sum">Three production apps for the quality team, a rebuild into a modular monolith, and deploys that run themselves.</p>
-        <div class="more" id="m1"><div><ul>
-          <li>React, FastAPI, and MySQL, with shared schemas across all three layers.</li>
-          <li>CI/CD to Linux EC2, systemd services behind nginx.</li>
-          <li>Production debugging from server logs, including one outage and its incident report.</li>
-        </ul></div></div>
-      </li>
-      <li class="commit scan">
-        <button type="button" class="commit-top" aria-expanded="false" aria-controls="m2">
-          <span class="when">Mar to May 2026</span>
-          <span class="org">Global Cleantech Directory<small>Data engineer and full-stack developer, Richmond Hill</small></span>
-          <span class="tog" aria-hidden="true"></span>
-        </button>
-        <p class="sum">Built a web platform from scratch, plus the data plumbing behind its OpenAI-powered chatbot.</p>
-        <div class="more" id="m2"><div><ul>
-          <li>Front end and server in JavaScript, Node.js, HTML, and CSS, with event logging that records how people use the platform.</li>
-          <li>MongoDB schemas and aggregation pipelines for chatbot and user data, processing query logs and engagement metrics.</li>
-        </ul></div></div>
-      </li>
-      <li class="commit scan">
-        <button type="button" class="commit-top" aria-expanded="false" aria-controls="m3">
-          <span class="when">Jan to Apr 2026</span>
-          <span class="org">University of Waterloo<small>Data engineer, Waterloo</small></span>
-          <span class="tog" aria-hidden="true"></span>
-        </button>
-        <p class="sum">Replaced manual report prep with pipelines, then put the results in front of senior leadership every month.</p>
-        <div class="more" id="m3"><div><ul>
-          <li>Python (Pandas) and SQL pipelines that clean and join 24 months of GA4 and library data.</li>
-          <li>30% fewer data inconsistencies and 3+ hours a week of manual prep saved.</li>
-          <li>Power BI and Oracle BI dashboards tracking 10+ KPIs.</li>
-        </ul></div></div>
-      </li>
-      <li class="commit scan">
-        <button type="button" class="commit-top" aria-expanded="false" aria-controls="m4">
-          <span class="when">May to Aug 2025</span>
-          <span class="org">Eon Media AI<small>Software engineer, Toronto</small></span>
-          <span class="tog" aria-hidden="true"></span>
-        </button>
-        <p class="sum">Cleaned sports broadcast data for ML training and built a way to score LLMs against each other.</p>
-        <div class="more" id="m4"><div><ul>
-          <li>ETL pipelines in Python (Pandas, NumPy) over 50K+ records, cutting data quality errors by 25%.</li>
-          <li>SQL schemas and validation checks for 1,000+ annotated samples pulled from video APIs, holding data integrity above 90%.</li>
-          <li>An evaluation framework that auto-scores highlight detection across 5+ LLMs. Prompt work on AI captions cut manual review by 40%.</li>
-        </ul></div></div>
-      </li>
-      <li class="commit scan">
-        <div class="commit-top">
-          <span class="when">Sep 2024 to Apr 2029</span>
-          <span class="org">University of Waterloo<small>BASc, Management Engineering. President's Scholarship.</small></span>
-        </div>
-        <p class="sum">Software engineering, databases and software design, algorithms and data structures, machine learning, probability and statistics.</p>
-      </li>
-    </ol>
-  </div>
-</section>
-
 <section class="block" id="stack">
   <div class="wrap">
     <p class="path" data-scramble>~/stack</p>
     <h2 class="scan">What I build with.</h2>
     <dl class="conf scan">
-      <div class="conf-row"><dt>languages</dt><dd><span class="live">Python</span><span class="live">SQL</span><span class="live">JavaScript</span><span>Ruby</span><span>Java</span><span>R</span><span>HTML/CSS</span></dd></div>
-      <div class="conf-row"><dt>frameworks</dt><dd><span class="live">React</span><span class="live">FastAPI</span><span>Ruby on Rails</span><span>Node.js</span><span>Pandas</span><span>NumPy</span><span>PyTorch</span><span>scikit-learn</span><span>Selenium</span></dd></div>
-      <div class="conf-row"><dt>databases</dt><dd><span class="live">MySQL</span><span>PostgreSQL</span><span>MongoDB</span><span>SQLite</span><span>BigQuery</span></dd></div>
-      <div class="conf-row"><dt>cloud and devops</dt><dd><span class="live">AWS EC2</span><span>S3</span><span>RDS</span><span class="live">Linux</span><span class="live">nginx</span><span class="live">Git</span><span>GitHub</span><span>REST APIs</span></dd></div>
+      <div class="conf-row"><dt>languages</dt><dd><span>Python</span><span>SQL</span><span>JavaScript</span><span>Ruby</span><span>Java</span><span>R</span><span>HTML/CSS</span></dd></div>
+      <div class="conf-row"><dt>frameworks</dt><dd><span>React</span><span>FastAPI</span><span>Ruby on Rails</span><span>Node.js</span><span>Pandas</span><span>NumPy</span><span>PyTorch</span><span>scikit-learn</span><span>Selenium</span></dd></div>
+      <div class="conf-row"><dt>databases</dt><dd><span>MySQL</span><span>PostgreSQL</span><span>MongoDB</span><span>SQLite</span><span>BigQuery</span></dd></div>
+      <div class="conf-row"><dt>cloud and devops</dt><dd><span>AWS EC2</span><span>S3</span><span>RDS</span><span>Linux</span><span>nginx</span><span>Git</span><span>GitHub</span><span>REST APIs</span></dd></div>
       <div class="conf-row"><dt>tools</dt><dd><span>Claude Code</span><span>VS Code</span><span>Jupyter</span><span>JIRA</span><span>Confluence</span><span>Power BI</span><span>Tableau</span><span>Excel</span></dd></div>
     </dl>
-    <p class="legend"><i></i>in production at Redstone right now</p>
+  </div>
+</section>
+
+<section class="block" id="school">
+  <div class="wrap">
+    <p class="path" data-scramble>~/school</p>
+    <div class="school scan">
+      <div>
+        <h2>University of Waterloo</h2>
+        <p class="degree">Bachelor of Applied Science in Management Engineering, on the President's Scholarship.</p>
+      </div>
+      <p class="job-meta"><b>BASc, Management Engineering</b>Sep 2024 to Apr 2029<br>Waterloo, ON</p>
+    </div>
+    <ul class="courses scan" style="--d:100ms" aria-label="Relevant coursework">
+      <li>Software Engineering</li><li>Databases and Software Design</li><li>Algorithms and Data Structures</li><li>Machine Learning</li><li>Probability and Statistics</li>
+    </ul>
   </div>
 </section>
 
@@ -768,6 +836,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
 
   /* ---------- section wipe ---------- */
   const wipe = $('#wipe'), wipeLabel = $('#wipe-label');
+  const PATHS = { top: '~', redstone: '~/work/redstone', cleantech: '~/work/cleantech', waterloo: '~/work/waterloo', eon: '~/work/eon' };
   let busy = false;
   function jump(el) { el.scrollIntoView({ behavior: 'instant', block: 'start' }); try { history.replaceState(null, '', '#' + el.id); } catch {} }
   function go(id) {
@@ -776,7 +845,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     if (reduce) { jump(el); return true; }
     if (busy) return true;
     busy = true;
-    wipeLabel.textContent = id === 'top' ? 'cd ~' : 'cd ~/' + id;
+    wipeLabel.textContent = 'cd ' + (PATHS[id] || '~/' + id);
     wipe.className = 'wipe in';
     setTimeout(() => {
       jump(el);
@@ -820,13 +889,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
     $$('main section').forEach(s => spy.observe(s));
   }
 
-  /* ---------- log entries ---------- */
-  $$('button.commit-top').forEach(btn => btn.addEventListener('click', () => {
-    const open = btn.getAttribute('aria-expanded') !== 'true';
-    btn.setAttribute('aria-expanded', String(open));
-    document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('open', open);
-  }));
-
   /* ---------- screenshots ---------- */
   const shots = $$('.shot img');
   $$('[data-shot]').forEach(btn => btn.addEventListener('click', () => {
@@ -855,31 +917,31 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
   function print(html) { const d = document.createElement('div'); d.innerHTML = html || ' '; out.appendChild(d); while (out.children.length > 160) out.firstChild.remove(); out.scrollTop = out.scrollHeight; return d; }
   const row = (k, v) => `<span class="k">${k.padEnd(9)}</span>${v}`;
   const NOW = [
-    row('role', 'full-stack developer, Redstone Food Group'),
-    row('running', '3 production apps on AWS EC2'),
+    row('builds', 'full-stack web apps and data pipelines'),
+    row('roles', '4 so far: full-stack, data, ML tooling'),
     row('school', 'Management Engineering, Waterloo'),
     row('based', 'Hamilton, Ontario'),
     '',
     '<span class="ok">This terminal works. Type help, or tap a command.</span>'
   ];
-  const SECTIONS = ['work', 'project', 'log', 'stack', 'contact'];
   const commands = {
     help: () => [
       row('about', 'who I am, in three lines'),
-      row('work', 'what I do at Redstone'),
+      row('work', 'four roles, newest first'),
+      row('jobs', 'redstone | cleantech | waterloo | eon'),
       row('project', 'the photo search site'),
-      row('log', "where I've worked, newest first"),
       row('stack', 'what I build with'),
+      row('school', 'where I study'),
       row('contact', 'how to reach me'),
       row('trail', 'comet | glyphs | blocks | off'),
       row('clear', 'wipe this screen')
     ],
     about: () => [
       "I'm Intehad. I study Management Engineering at Waterloo",
-      'and work as a full-stack developer at Redstone Food Group.',
-      'React up front, FastAPI and MySQL behind it, EC2 underneath.'
+      'and build full-stack web apps and the data pipelines behind them.',
+      'Four roles so far. Type work to see them.'
     ],
-    ls: () => ['work/  project/  log/  stack/  contact/  <span class="k">now.txt</span>'],
+    ls: a => /^(~\/)?work\/?$/.test(a[0] || '') ? ['redstone/  cleantech/  waterloo/  eon/'] : ['work/  project/  stack/  school/  contact/  <span class="k">now.txt</span>'],
     pwd: () => ['/home/visitor'],
     whoami: () => ['visitor'],
     now: () => NOW,
@@ -890,13 +952,14 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 2
       ? ['[sudo] password for visitor: ********', `<span class="ok">Access granted.</span> Send the details to ${EMAIL}`]
       : ['<span class="hot">visitor is not in the sudoers file.</span> Try: sudo hire intehad']
   };
-  for (const s of ['work', 'project', 'log', 'stack']) commands[s] = () => { go(s); return [`<span class="ok">opening ~/${s}</span>`]; };
+  for (const s of ['work', 'project', 'stack', 'school', 'redstone', 'cleantech', 'waterloo', 'eon']) commands[s] = () => { go(s); return [`<span class="ok">opening ${PATHS[s] || '~/' + s}</span>`]; };
+  commands.jobs = commands.log = commands.work; commands.education = commands.school;
   function run(raw) {
     const text = raw.trim();
     print(PS + esc(text));
     if (!text) return;
     let [cmd, ...args] = text.toLowerCase().split(/\s+/);
-    if (cmd === 'cd' || cmd === 'open') { cmd = (args[0] || '').replace(/^~?\/?|\/$/g, '') || 'pwd'; args = []; }
+    if (cmd === 'cd' || cmd === 'open') { cmd = (args[0] || '').replace(/\/$/, '').split('/').pop().replace('~', '') || 'pwd'; args = []; }
     if (cmd === 'cat' && /^now(\.txt)?$/.test(args[0] || '')) cmd = 'now';
     const fn = Object.prototype.hasOwnProperty.call(commands, cmd) ? commands[cmd] : null;
     const lines = fn ? fn(args) : [`<span class="hot">command not found:</span> ${esc(cmd)}. Type help to see what works.`];

@@ -18,7 +18,7 @@ URL = "https://intehad-lasker.github.io/Portfolio/"
 TITLE = "Intehad Lasker, Full-Stack Developer"
 DESC = (
     "Full-stack developer and Management Engineering student at the University of "
-    "Waterloo. React, FastAPI, MySQL, and the pipelines that ship them."
+    "Waterloo. Web apps built end to end, data pipelines, and ML tooling."
 )
 ICON = (
     "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
